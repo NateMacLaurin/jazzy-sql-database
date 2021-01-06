@@ -29,8 +29,12 @@ VALUES(DEFAULT, 'Take Five', '5:24', '1959-09-29'),
 SELECT * FROM "artist" ORDER BY "birthdate" DESC;
 
 --artist POST query
+INSERT INTO "artist" ("name", "birthdate")
+VALUES ($1, $2);
 
 --song GET query
 SELECT * FROM "song" ORDER BY "title" ASC;
 
 --song POST query
+INSERT INTO "song" ("title", "length", "released")
+VALUES ($1, $2, $3);

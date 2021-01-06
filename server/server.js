@@ -1,8 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const pg = require('pg');
 
 const app = express();
 const PORT = 5000;
+
+//create new pool object
+const Pool = pg.Pool;
+const pool = new Pool({
+    database: 'jazzy_sql',
+    host: 'localhost',
+    port: 5432,
+    user: 'postgres',
+    password: 'p3LmANHQ$p'
+});
+
+//define pool helpers
+pool.on('connect', () => {
+    console.log('CONNECTED');
+});
+
+pool.on('error', (error) => {
+    console.log(error);
+});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('server/public'));
@@ -12,7 +32,7 @@ app.listen(PORT, () => {
 });
 
 // TODO - Replace static content with a database tables
-const artistList = [ 
+/*const artistList = [ 
     {
         name: 'Ella Fitzgerald',
         birthdate: '04-25-1917'
@@ -46,11 +66,21 @@ const songList = [
         length: '5:17',
         released: '2012-02-01'
     }
-];
+];*/
 
 app.get('/artist', (req, res) => {
-    console.log(`In /songs GET`);
-    res.send(artistList);
+    // console.log(`In /songs GET`);
+    // res.send(artistList);
+    const queryText = `SELECT * FROM "artist" ORDER BY "year_born" DESC;`;
+    pool.query(queryText)
+        .then((result) => {
+            console.log(result);
+            res.send(result.rows);
+        }).catch((error) => {
+            console.log(error);
+            //Internal Server Error
+            res.sendStatus(500);
+        });
 });
 
 app.post('/artist', (req, res) => {

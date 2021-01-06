@@ -1,4 +1,4 @@
---Create 2 tables as defined in the ERC
+--Create 2 tables as defined in the ERD
 CREATE TABLE "artist" (
     "id" SERIAL PRIMARY KEY,
     "artist_name" varchar(80) not null,
